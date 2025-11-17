@@ -56,6 +56,5 @@ continue
 
 arrival_time = 0
 pID = f"P{i}"
-
 process_list.append([bt, arrival_time, pID])
 gantt, completed = sjf(process_list)
