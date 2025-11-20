@@ -56,10 +56,25 @@ def fcfs(process_list):
     completed = {}
     total_busy = 0
 
+<<<<<<< HEAD
     for p in processes:
         pid = p['pid']
         arrival = p['arrival']
         burst = p['burst']
+=======
+    #while loop that runs until are processes are executed
+    while process_list:
+        available = [p for p in process_list if p[0] <= t]
+
+        if not available:
+            gantt.append(("Idle", t, 1))
+            t += 1
+            continue
+
+        #pick first available process and remove it from list
+        process = available[0]
+        process_list.remove(process)
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
         # idle until arrival
         if time < arrival:
@@ -67,6 +82,7 @@ def fcfs(process_list):
             gantt.extend(['Idle'] * idle_len)
             time = arrival
 
+<<<<<<< HEAD
         start = time
         completion = start + burst
         turnaround = completion - arrival
@@ -86,6 +102,35 @@ def fcfs(process_list):
             'waiting': waiting,
             'response': response,
         }
+=======
+        gantt.append((pID, start_time, burst_time))  #update gantt chart
+        completed[pID] = [arrival_time, burst_time, completion_time, turnaround_time, waiting_time]  #store results for processes
+
+    #print results in table
+    print(f"\n{'Process':<10}{'Arrival':>10}{'Burst':>10}{'Completion':>12}{'Turnaround':>12}{'Waiting':>10}")
+    for pID, data in completed.items():
+        print(f"{pID:<10}{data[0]:>10}{data[1]:>10}{data[2]:>12}{data[3]:>12}{data[4]:>10}")
+
+    n = len(completed)
+    avg_wt = sum(data[4] for data in completed.values()) / n
+    avg_tat = sum(data[3] for data in completed.values()) / n
+    print(f"\nAverage Waiting Time: {avg_wt:>12.2f}")
+    print(f"Average Turnaround Time: {avg_tat:>12.2f}")
+
+    print("\nGantt Chart:")
+    chart = ""
+    timeline = ""
+    for pID, start_time, burst_time in gantt:
+        block = f"|{pID.center(burst_time*3)}"
+        chart += block
+        timeline += f"{str(start_time).rjust(3)}{' '*(burst_time*3)}"
+    chart += "|"
+    timeline += f"{t:>3}"
+
+
+    print(chart)
+    print(timeline)
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
         time = completion
 
@@ -139,14 +184,27 @@ def _read_input():
                 continue
             break
         except ValueError:
+<<<<<<< HEAD
             print('Invalid input. Please enter an integer.')
+=======
+            print("Invalid input. Please enter a number.")
+
+    #user enters process details
+    process_list = []
+    for i in range(n):
+        pID = input(f"Enter Process ID for process {i + 1}: ")
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
     plist = []
     for i in range(1, n + 1):
         pid = input(f'Enter Process ID for process {i}: ').strip() or f'P{i}'
         while True:
             try:
+<<<<<<< HEAD
                 arrival = int(input(f'Enter Arrival Time for {pid}: '))
+=======
+                arrival = int(input(f"Enter Arrival Time for {pID}: "))
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
                 if arrival < 0:
                     print('Arrival time cannot be negative.')
                     continue
@@ -155,7 +213,11 @@ def _read_input():
                 print('Invalid input. Please enter an integer.')
         while True:
             try:
+<<<<<<< HEAD
                 burst = int(input(f'Enter Burst Time for {pid}: '))
+=======
+                burst = int(input(f"Enter Burst Time for {pID}: "))
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
                 if burst <= 0:
                     print('Burst time must be positive.')
                     continue
@@ -165,6 +227,10 @@ def _read_input():
         plist.append({'pid': pid, 'arrival': arrival, 'burst': burst})
     return plist
 
+<<<<<<< HEAD
+=======
+        process_list.append([arrival, burst, pID])
+>>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
 def main():
     plist = _read_input()
