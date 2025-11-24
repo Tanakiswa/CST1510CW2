@@ -1,13 +1,11 @@
+#Shortest Job First CPU scheduling algorithm
 def sjf(process_list):
     t = 0
     gantt = []
-    completed ={}
+    completed = {}
 
     while process_list:
-        available = []
-        for p in process_list:
-            if p[1] <= t:
-                available.append(p)
+        available = [p for p in process_list if p[1] <= t]
 
         if not available:
             gantt.append(("Idle", t, t+1))
@@ -43,7 +41,7 @@ def main():
             if n <= 0:
                 print("Enter a positive integer")
                 continue
-             break
+            break
         except ValueError:
             print("Enter an integer")
 
@@ -61,7 +59,7 @@ for i in range(1, n + 1):
                 print("Enter a positive integer")
 
 arrival_times = []
-for i range(1, n + 1):
+for i in range(1, n + 1):
     while True:
             try:
                 at = int(input(f"Enter arrival time for P{i}: "))
@@ -90,8 +88,7 @@ for pID in sorted(completed.keys()):
     burst, arrival, wt, tt = completed[pID]
     total_wt += wt
     total_tt += tt
-
-    print(f"{pID:<10}{burst:<10}{arrival:<15}{wt:<10}{tt:<15}
+    print(f"{pID:<10}{burst:<10}{arrival:<15}{wt:<10}{tt:<15}")
 
 avg_wt = total_wt / n
 avg_tt = total_tt / n
@@ -107,8 +104,9 @@ print("|")
 
 print("0", end="")
 for pID, start, end in gantt:
-    print(f"{'' * (len(pID)+1)}{end}", end="")
+    print(f" {end}", end="")
 print()
 
 if __name__ == "__main__":
-main()
+    main()
+
