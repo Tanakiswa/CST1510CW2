@@ -18,7 +18,7 @@ def round_robin(burst: List[int], quantum: int, arrival: Optional[List[int]] = N
 
     Returns:
         A dict with keys: 'completion_times', 'turnaround_times', 'waiting_times',
-        'avg_waiting_time', 'avg_turnaround_time'.
+        'avg_waiting_time', 'avg_turnaround_time', 'execution_log'.
     """
     if quantum <= 0:
         raise ValueError("Time quantum must be > 0")
@@ -116,7 +116,7 @@ def plot_gantt(execution_log: List[tuple], burst: List[int], arrival: Optional[L
         print("matplotlib is required to generate Gantt charts. Install it with: pip install matplotlib")
         return
 
-    n = max(pid for pid, s, e in execution_log) + 1 if execution_log else 0
+    n = max((pid for pid, s, e in execution_log), default=-1) + 1
     if arrival is None:
         arrival = [0] * n
 

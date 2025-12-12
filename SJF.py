@@ -1,32 +1,35 @@
-<<<<<<< HEAD
 """Simple non-preemptive SJF scheduler.
 Process representation: list of dicts with keys 'pid','arrival','burst'.
 """
 import sys
 
-=======
 #Shortest Job First CPU scheduling algorithm
->>>>>>> f939d0fa0bd0e4eb8a9db3d9255a228418564d85
-def sjf(process_list):
+
+"""Simple non-preemptive SJF scheduler.
+Process representation: list of dicts with keys 'pid','arrival','burst'.
+"""
+import sys
+from typing import List, Dict, Tuple
+
+
+def sjf(process_list: List[Dict]) -> Tuple[List[Tuple[str, int, int]], Dict[str, Dict], Dict]:
+    """Non-preemptive Shortest Job First scheduling.
+
+    Returns gantt (list of (pid, start, end)), completed dict and metrics dict.
+    """
     # copy and sort by arrival for deterministic behavior
     processes = sorted(process_list, key=lambda p: p['arrival'])
     time = 0
-    gantt = []
-    completed = {}
-<<<<<<< HEAD
+    gantt: List[Tuple[str, int, int]] = []
+    completed: Dict[str, Dict] = {}
     remaining = processes.copy()
-=======
-
-    while process_list:
-        available = [p for p in process_list if p[1] <= t]
->>>>>>> f939d0fa0bd0e4eb8a9db3d9255a228418564d85
 
     while remaining:
         # find available processes
         available = [p for p in remaining if p['arrival'] <= time]
         if not available:
             # CPU idle one unit
-            gantt.append(('Idle', time, time+1))
+            gantt.append(('Idle', time, time + 1))
             time += 1
             continue
 
@@ -79,7 +82,8 @@ def sjf(process_list):
 
     return gantt, completed, metrics
 
-def _read_input():
+
+def _read_input() -> List[Dict]:
     while True:
         try:
             n = int(input('Enter number of processes: '))
@@ -90,29 +94,10 @@ def _read_input():
         except ValueError:
             print('Enter an integer')
 
-<<<<<<< HEAD
-    plist = []
+    plist: List[Dict] = []
     for i in range(1, n + 1):
         pid = input(f'Enter Process ID for process {i}: ').strip() or f'P{i}'
         while True:
-=======
-burst_times = []
-for i in range(1, n + 1):
-         while True:
-             try:
-                bt = int(input(f"Enter burst time for P{i}: "))
-                if bt <= 0:
-                    print("Enter a positive integer")
-                    continue
-                burst_times.append(bt)
-                break
-             except ValueError:
-                print("Enter a positive integer")
-
-arrival_times = []
-for i in range(1, n + 1):
-    while True:
->>>>>>> f939d0fa0bd0e4eb8a9db3d9255a228418564d85
             try:
                 arrival = int(input(f'Enter Arrival Time for {pid}: '))
                 if arrival < 0:
@@ -133,6 +118,7 @@ for i in range(1, n + 1):
         plist.append({'pid': pid, 'arrival': arrival, 'burst': burst})
     return plist
 
+
 def print_results(gantt, completed, metrics):
     print(f"{'Process':<8}{'Arr':>6}{'Burst':>8}{'Start':>8}{'Comp':>8}{'Turn':>8}{'Wait':>8}{'Resp':>8}")
     for pid, data in completed.items():
@@ -145,7 +131,7 @@ def print_results(gantt, completed, metrics):
         print("|")
         print("0", end="")
         for pid, start, end in gantt:
-            print(f"{' ' * (len(pid)+1)}{end}", end="")
+            print(f" {end}", end="")
         print()
     else:
         print('(no timeline)')
@@ -155,6 +141,7 @@ def print_results(gantt, completed, metrics):
     print(f"Average Turnaround Time: {metrics['avg_turnaround']:.2f}")
     print(f"Average Response Time:   {metrics['avg_response']:.2f}")
     print(f"CPU Utilization:         {metrics['cpu_utilization']:.2f}%")
+
 
 def main():
     # Support a demo mode via command-line: `--demo`
@@ -168,37 +155,12 @@ def main():
     else:
         plist = _read_input()
 
-<<<<<<< HEAD
     gantt, completed, metrics = sjf(plist)
     print_results(gantt, completed, metrics)
 
+
 if __name__ == '__main__':
     main()
-=======
-for pID in sorted(completed.keys()):
-    burst, arrival, wt, tt = completed[pID]
-    total_wt += wt
-    total_tt += tt
-    print(f"{pID:<10}{burst:<10}{arrival:<15}{wt:<10}{tt:<15}")
 
-avg_wt = total_wt / n
-avg_tt = total_tt / n
 
-print("-" * 65)
-print(f"{'Average':<10}{avg_wt:<12.2f}{'':>12}{'':>12}{avg_tt:>15.2f}")
-
-print("\nGantt Chart Order:")
-
-for pID, start, end in gantt:
-    print(f"| {pID} ", end="")
-print("|")
-
-print("0", end="")
-for pID, start, end in gantt:
-    print(f" {end}", end="")
-print()
-
-if __name__ == "__main__":
-    main()
-
->>>>>>> f939d0fa0bd0e4eb8a9db3d9255a228418564d85
+if __name__ == '__main__':

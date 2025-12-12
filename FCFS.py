@@ -1,80 +1,29 @@
- #First Come First Serve CPU scheduling alogorithm
- #class structure
-class FCFSScheduler:
-    def __init__(self): 
-        self.process_list = []
-        self.completed_processes = {}
-        self.gantt_chart = {
-        'total_waiting_time': 0,
-        'total_turnaround_time': 0,
-        'total_response_time': 0,
-        'cpu_utilization': 0
-        }
+"""FCFS.py
+Simple First-Come First-Serve CPU scheduling simulator.
 
-#function to define process list
-def run_simulation(self):
-    sorted_processes = sorted(self.process_list, key=lambda x: x['arrival_time'])
-    def fcfs(process_list):
-        """Run FCFS scheduling.
+Provides a CLI for entering processes and prints results.
+"""
 
-        process_list: list of dicts with keys 'pid', 'arrival', 'burst'
-        Returns: gantt(list), completed(dict), metrics(dict)
-        completed[pID] = {arrival, burst, start, completion, turnaround, waiting, response}
-        metrics: average times and cpu utilization
-        """
-        # Sort by arrival time (stable)
-        processes = sorted(process_list, key=lambda p: p['arrival'])
+from typing import List, Dict, Tuple
 
-        time = 0
-        gantt = []
-        completed = {}
-        total_busy = 0
 
-        for p in processes:
-            pid = p['pid']
-            arrival = p['arrival']
-            burst = p['burst']
-
-            # idle until arrival
-            if time < arrival:
-                idle_len = arrival - time
-                gantt.extend(['Idle'] * idle_len)
-                time = arrival
-def fcfs(process_list):
+def fcfs(process_list: List[Dict]) -> Tuple[List[str], Dict[str, Dict], Dict]:
     """Run FCFS scheduling.
 
     process_list: list of dicts with keys 'pid', 'arrival', 'burst'
-    Returns: gantt(list), completed(dict), metrics(dict)
-    completed[pID] = {arrival, burst, start, completion, turnaround, waiting, response}
-    metrics: average times and cpu utilization
+    Returns: (gantt, completed, metrics)
     """
-    # Sort by arrival time (stable)
     processes = sorted(process_list, key=lambda p: p['arrival'])
 
     time = 0
-    gantt = []
-    completed = {}
+    gantt: List[str] = []
+    completed: Dict[str, Dict] = {}
     total_busy = 0
 
-<<<<<<< HEAD
     for p in processes:
         pid = p['pid']
         arrival = p['arrival']
         burst = p['burst']
-=======
-    #while loop that runs until are processes are executed
-    while process_list:
-        available = [p for p in process_list if p[0] <= t]
-
-        if not available:
-            gantt.append(("Idle", t, 1))
-            t += 1
-            continue
-
-        #pick first available process and remove it from list
-        process = available[0]
-        process_list.remove(process)
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
         # idle until arrival
         if time < arrival:
@@ -82,7 +31,6 @@ def fcfs(process_list):
             gantt.extend(['Idle'] * idle_len)
             time = arrival
 
-<<<<<<< HEAD
         start = time
         completion = start + burst
         turnaround = completion - arrival
@@ -102,35 +50,6 @@ def fcfs(process_list):
             'waiting': waiting,
             'response': response,
         }
-=======
-        gantt.append((pID, start_time, burst_time))  #update gantt chart
-        completed[pID] = [arrival_time, burst_time, completion_time, turnaround_time, waiting_time]  #store results for processes
-
-    #print results in table
-    print(f"\n{'Process':<10}{'Arrival':>10}{'Burst':>10}{'Completion':>12}{'Turnaround':>12}{'Waiting':>10}")
-    for pID, data in completed.items():
-        print(f"{pID:<10}{data[0]:>10}{data[1]:>10}{data[2]:>12}{data[3]:>12}{data[4]:>10}")
-
-    n = len(completed)
-    avg_wt = sum(data[4] for data in completed.values()) / n
-    avg_tat = sum(data[3] for data in completed.values()) / n
-    print(f"\nAverage Waiting Time: {avg_wt:>12.2f}")
-    print(f"Average Turnaround Time: {avg_tat:>12.2f}")
-
-    print("\nGantt Chart:")
-    chart = ""
-    timeline = ""
-    for pID, start_time, burst_time in gantt:
-        block = f"|{pID.center(burst_time*3)}"
-        chart += block
-        timeline += f"{str(start_time).rjust(3)}{' '*(burst_time*3)}"
-    chart += "|"
-    timeline += f"{t:>3}"
-
-
-    print(chart)
-    print(timeline)
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
         time = completion
 
@@ -154,7 +73,7 @@ def fcfs(process_list):
     return gantt, completed, metrics
 
 
-def print_results(gantt, completed, metrics):
+def print_results(gantt: List[str], completed: Dict[str, Dict], metrics: Dict) -> None:
     # Print table
     print(f"{'Process':<8}{'Arr':>6}{'Burst':>8}{'Start':>8}{'Comp':>8}{'Turn':>8}{'Wait':>8}{'Resp':>8}")
     for pid, data in completed.items():
@@ -165,8 +84,19 @@ def print_results(gantt, completed, metrics):
     if not gantt:
         print('(no timeline)')
     else:
-        timeline = ' | '.join(gantt)
-        print(timeline)
+        # compress gantt into blocks like P1(3) Idle(2) etc.
+        blocks = []
+        prev = gantt[0]
+        count = 1
+        for entry in gantt[1:]:
+            if entry == prev:
+                count += 1
+            else:
+                blocks.append(f"{prev}({count})")
+                prev = entry
+                count = 1
+        blocks.append(f"{prev}({count})")
+        print(' | '.join(blocks))
 
     print('\nSUMMARY:')
     print(f"Average Waiting Time:    {metrics['avg_waiting']:.2f}")
@@ -175,7 +105,7 @@ def print_results(gantt, completed, metrics):
     print(f"CPU Utilization:         {metrics['cpu_utilization']:.2f}%")
 
 
-def _read_input():
+def _read_input() -> List[Dict]:
     while True:
         try:
             n = int(input('Enter number of processes: '))
@@ -184,27 +114,14 @@ def _read_input():
                 continue
             break
         except ValueError:
-<<<<<<< HEAD
             print('Invalid input. Please enter an integer.')
-=======
-            print("Invalid input. Please enter a number.")
 
-    #user enters process details
-    process_list = []
-    for i in range(n):
-        pID = input(f"Enter Process ID for process {i + 1}: ")
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
-
-    plist = []
+    plist: List[Dict] = []
     for i in range(1, n + 1):
         pid = input(f'Enter Process ID for process {i}: ').strip() or f'P{i}'
         while True:
             try:
-<<<<<<< HEAD
                 arrival = int(input(f'Enter Arrival Time for {pid}: '))
-=======
-                arrival = int(input(f"Enter Arrival Time for {pID}: "))
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
                 if arrival < 0:
                     print('Arrival time cannot be negative.')
                     continue
@@ -213,11 +130,7 @@ def _read_input():
                 print('Invalid input. Please enter an integer.')
         while True:
             try:
-<<<<<<< HEAD
                 burst = int(input(f'Enter Burst Time for {pid}: '))
-=======
-                burst = int(input(f"Enter Burst Time for {pID}: "))
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
                 if burst <= 0:
                     print('Burst time must be positive.')
                     continue
@@ -227,10 +140,6 @@ def _read_input():
         plist.append({'pid': pid, 'arrival': arrival, 'burst': burst})
     return plist
 
-<<<<<<< HEAD
-=======
-        process_list.append([arrival, burst, pID])
->>>>>>> 49e42a75b35a00e5f7f083abfae25dc557b951e9
 
 def main():
     plist = _read_input()
@@ -240,3 +149,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+ 
