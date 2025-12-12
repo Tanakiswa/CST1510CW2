@@ -2,13 +2,6 @@
 Process representation: list of dicts with keys 'pid','arrival','burst'.
 """
 import sys
-
-#Shortest Job First CPU scheduling algorithm
-
-"""Simple non-preemptive SJF scheduler.
-Process representation: list of dicts with keys 'pid','arrival','burst'.
-"""
-import sys
 from typing import List, Dict, Tuple
 
 
@@ -119,7 +112,7 @@ def _read_input() -> List[Dict]:
     return plist
 
 
-def print_results(gantt, completed, metrics):
+def print_results(gantt: List[Tuple[str, int, int]], completed: Dict[str, Dict], metrics: Dict) -> None:
     print(f"{'Process':<8}{'Arr':>6}{'Burst':>8}{'Start':>8}{'Comp':>8}{'Turn':>8}{'Wait':>8}{'Resp':>8}")
     for pid, data in completed.items():
         print(f"{pid:<8}{data['arrival']:>6}{data['burst']:>8}{data['start']:>8}{data['completion']:>8}{data['turnaround']:>8}{data['waiting']:>8}{data['response']:>8}")
@@ -161,6 +154,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-if __name__ == '__main__':
